@@ -1,0 +1,53 @@
+.register {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  width: 400px;
+  box-shadow: 0 0 10px black;
+}
+.registerHeading {
+  font-size: 40px;
+}
+
+.registerField {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 50px;
+  flex-direction: column;
+  height: 60px;
+}
+.registerField input{
+  height: 35px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.registerSubmit {
+  margin-top: 40px;
+  height: 40px;
+  width: 70px;
+  margin-left: 100px;
+}
+.registerLogin {
+  color: blue;
+  cursor: pointer;
+}
+.errorMessage {
+  color: red;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .register {
+    height: max-content;
+    width: max-content;
+  }
+  .registerField {    
+    flex-direction: column;
+    height: 60px;
+  }
+}

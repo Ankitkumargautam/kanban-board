@@ -1,0 +1,42 @@
+.login {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  width: 400px;
+  box-shadow: 0 0 10px black;
+}
+.loginHeading {
+  font-size: 40px;
+}
+
+.loginField {
+  display: flex;
+  justify-content: center;
+  padding: 5px 50px;
+  flex-direction: column;
+  height: 60px;
+}
+.loginField input{
+  height: 35px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.loginSubmit {
+  margin-top: 40px;
+  height: 40px;
+  width: 60px;
+  margin-left: 100px;
+}
+.loginRegister {
+  color: blue;
+  cursor: pointer;
+}
+.errorMessage {
+  color: red;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+}
