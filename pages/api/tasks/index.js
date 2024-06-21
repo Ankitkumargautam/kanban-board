@@ -56,6 +56,30 @@ const handler = async (req, res) => {
     });
   }
 
+  if (req.method === 'DELETE') {
+    const { taskId } = req.body;
+    console.log(taskId);
+    try {
+      const task = await Task.findOne({ _id: taskId });
+      if (!task) {
+        return res.status(400).json({
+          status: 400,
+          message: 'Task not Found',
+        });
+      }
+      await Task.findByIdAndDelete({ _id: taskId });
+      return res.status(200).json({
+        status: 200,
+        message: 'Task deleted successfully',
+      });
+    } catch (error) {
+      return res.status(400).json({
+        status: 400,
+        message: 'Task not deleted',
+      });
+    }
+  }
+
   res.status(405).json({ message: 'Method not allowed' });
 };
 

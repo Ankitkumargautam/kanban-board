@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
-import styles from './Editable.module.css';
+import styles from './EditabledCard.module.css';
 import { X } from 'react-feather';
 
-const Editable = ({
+const EditabledCard = ({
   text,
   placeholder,
   displayClass,
   editClass,
   buttonText,
   onSubmit,
-  method,
 }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [inputText, setInputText] = useState('');
+  const [inputDescription, setInputDescription] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (inputText && onSubmit && method === 'addBoard') {
-      onSubmit(inputText);
+    if (inputText && onSubmit) {
+      onSubmit(inputText, inputDescription);
       setInputText('');
       setIsEditable(false);
     }
@@ -36,6 +36,12 @@ const Editable = ({
             placeholder={placeholder || text}
             onChange={(e) => setInputText(e.target.value)}
             autoFocus
+          />
+          <input
+            type="text"
+            value={inputDescription}
+            placeholder="description"
+            onChange={(e) => setInputDescription(e.target.value)}
           />
           <div className={styles.editableEditFooter}>
             <button type="submit">{buttonText || 'Add'}</button>
@@ -56,7 +62,7 @@ const Editable = ({
   );
 };
 
-export default Editable;
+export default EditabledCard;
 
 // import React, { useState } from 'react';
 // import styles from './Editable.module.css';

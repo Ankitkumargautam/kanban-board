@@ -34,6 +34,30 @@ const handler = async (req, res) => {
     });
   }
 
+  if (req.method === 'DELETE') {
+    const { boardId } = req.body;
+    console.log(boardId);
+    try {
+      const board = await Board.findOne({ _id: boardId });
+      if (!board) {
+        return res.status(400).json({
+          status: 400,
+          message: 'Task not Found',
+        });
+      }
+      await Board.findByIdAndDelete({ _id: boardId });
+      return res.status(200).json({
+        status: 200,
+        message: 'Task deleted successfully',
+      });
+    } catch (error) {
+      return res.status(400).json({
+        status: 400,
+        message: 'Task not deleted',
+      });
+    }
+  }
+
   res.status(405).json({ message: 'Method not allowed' });
 };
 
