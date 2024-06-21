@@ -19,6 +19,7 @@ const EditabledCard = ({
     if (inputText && onSubmit) {
       onSubmit(inputText, inputDescription);
       setInputText('');
+      setInputDescription('');
       setIsEditable(false);
     }
   };
