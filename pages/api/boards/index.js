@@ -36,7 +36,6 @@ const handler = async (req, res) => {
 
   if (req.method === 'DELETE') {
     const { boardId } = req.body;
-    console.log(boardId);
     try {
       const board = await Board.findOne({ _id: boardId });
       if (!board) {

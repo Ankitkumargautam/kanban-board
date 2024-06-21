@@ -42,8 +42,6 @@ const Board = ({ board, tasks, fetchBoardsAndTasks }) => {
 
   const deleteBoardHandler = async (Id) => {
     try {
-      console.log(user?.token, ':ll', Id);
-
       await axios.delete('/api/boards', {
         headers: {
           Authorization: `Bearer ${user?.token}`,

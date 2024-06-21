@@ -58,7 +58,6 @@ const handler = async (req, res) => {
 
   if (req.method === 'DELETE') {
     const { taskId } = req.body;
-    console.log(taskId);
     try {
       const task = await Task.findOne({ _id: taskId });
       if (!task) {

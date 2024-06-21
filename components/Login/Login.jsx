@@ -25,12 +25,10 @@ const Login = ({ setShowLogin }) => {
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    console.log(values);
     try {
       const { data } = await axios.post('/api/auth/login', values);
       // alert(data?.message);
       toast(data?.message);
-      console.log('data: ', data.data);
       localStorage.setItem('userInfo', JSON.stringify(data.data));
       setUser(data.data);
       setSubmitting(false);

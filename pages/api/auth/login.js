@@ -36,8 +36,6 @@ export default async function handler(req, res) {
         user.password
       );
 
-      console.log('comparedPassword: ', comparedPassword);
-
       if (Object.keys(user).length > 0 && comparedPassword) {
         return res.status(200).json({
           status: 200,

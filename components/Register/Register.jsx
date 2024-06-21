@@ -30,11 +30,9 @@ const Register = ({ setShowLogin }) => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     // Handle form submission here
-    console.log(values, 'ss');
     try {
       const { data } = await axios.post('/api/auth/register', values);
       toast(data?.message);
-      console.log('data: ', data);
       localStorage.setItem('userInfo', JSON.stringify(data.data));
       setUser(data.data);
       setSubmitting(false);
