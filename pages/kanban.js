@@ -8,6 +8,7 @@ import Editable from '../components/Editabled/Editable';
 
 import { DragDropContext } from 'react-beautiful-dnd';
 import Modal from '../components/Modal/Modal';
+import { useRouter } from 'next/router';
 
 const KanbanPage = () => {
   const { user } = ContextState();
@@ -16,11 +17,18 @@ const KanbanPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedTask, setSelectedTask] = useState(null); // State for selected task
   const [showModal, setShowModal] = useState(false); // State for modal visibility
+  const router = useRouter();
 
   useEffect(() => {
     if (user && user?.token) {
       fetchBoardsAndTasks();
     }
+    setTimeout(() => {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      if (!userInfo) {
+        router.push('/');
+      }
+    }, 2000);
   }, [user && user?.token]);
 
   const fetchBoardsAndTasks = async () => {
@@ -141,11 +149,7 @@ const KanbanPage = () => {
           Authorization: `Bearer ${user?.token}`,
         },
       };
-      // await axios.put(
-      //   `/api/tasks/tasks/${updatedTask._id}`,
-      //   updatedTask,
-      //   config
-      // );
+
       await axios.put(`/api/tasks/${updatedTask._id}`, updatedTask, config);
       fetchBoardsAndTasks();
       toast.success('Task updated successfully');
@@ -153,6 +157,11 @@ const KanbanPage = () => {
       toast.error('Failed to update task');
       console.error(error);
     }
+  };
+
+  const logoutHandler = () => {
+    localStorage.removeItem('userInfo');
+    router.push('/');
   };
 
   if (loading) {
@@ -166,6 +175,9 @@ const KanbanPage = () => {
         <h3>
           Welcome <span>{user?.name}</span>
         </h3>
+        <div className={styles.logout} onClick={() => logoutHandler()}>
+          Logout
+        </div>
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className={styles.appBoardsContainer}>

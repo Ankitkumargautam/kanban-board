@@ -36,6 +36,20 @@
 .appNavbar span{
   color: rgb(57, 57, 240);
 }
+@media (max-width: 480px) {
+  .appNavbar {
+   flex-direction: column;
+   padding: 5px;
+  }
+  
+}
+.logout{
+  font-size: 20px;
+  font-weight: 400;
+  cursor: pointer;
+  /* background-color: aqua; */
+  color: rgb(54, 54, 54);
+}
 
 .appBoardsContainer {
   flex: 1;
