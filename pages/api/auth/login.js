@@ -25,7 +25,7 @@ export default async function handler(req, res) {
 
       const user = await User.findOne({ email: email });
 
-      if (Object.keys(user).length < 1)
+      if (!user)
         return res.status(400).json({
           status: 400,
           message: 'User not found',

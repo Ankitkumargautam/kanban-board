@@ -1,0 +1,45 @@
+.board {
+  min-width: 290px;
+  width: 290px;
+  max-height: 100%;
+  flex-basis: 290px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: rgb(240, 248, 252);
+  border-radius: 10px;
+}
+
+.boardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.boardHeaderTitle {
+  font-weight: bold;
+  font-size: 1rem;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.boardHeaderTitle span {
+  color: rgb(145, 145, 145);
+}
+
+.boardHeaderTitleMore {
+  cursor: pointer;
+  position: relative;
+}
+
+.boardCards {
+  background-color: #c7bebe;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}

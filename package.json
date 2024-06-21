@@ -20,6 +20,7 @@
     "react": "^18",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18",
+    "react-feather": "^2.0.10",
     "react-toastify": "^10.0.5",
     "yup": "^1.4.0"
   }
