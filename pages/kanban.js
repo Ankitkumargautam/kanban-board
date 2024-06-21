@@ -7,12 +7,15 @@ import { ContextState } from '../Context/ContextProvider';
 import Editable from '../components/Editabled/Editable';
 
 import { DragDropContext } from 'react-beautiful-dnd';
+import Modal from '../components/Modal/Modal';
 
 const KanbanPage = () => {
   const { user } = ContextState();
   const [boards, setBoards] = useState([]);
   const [tasksByBoard, setTasksByBoard] = useState({});
   const [loading, setLoading] = useState(true);
+  const [selectedTask, setSelectedTask] = useState(null); // State for selected task
+  const [showModal, setShowModal] = useState(false); // State for modal visibility
 
   useEffect(() => {
     if (user && user?.token) {
@@ -126,6 +129,32 @@ const KanbanPage = () => {
     }
   };
 
+  const openModal = (task) => {
+    setSelectedTask(task);
+    setShowModal(true);
+  };
+
+  const handleSave = async (updatedTask) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      };
+      // await axios.put(
+      //   `/api/tasks/tasks/${updatedTask._id}`,
+      //   updatedTask,
+      //   config
+      // );
+      await axios.put(`/api/tasks/${updatedTask._id}`, updatedTask, config);
+      fetchBoardsAndTasks();
+      toast.success('Task updated successfully');
+    } catch (error) {
+      toast.error('Failed to update task');
+      console.error(error);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -147,6 +176,7 @@ const KanbanPage = () => {
                 board={board}
                 tasks={tasksByBoard[board._id]}
                 fetchBoardsAndTasks={fetchBoardsAndTasks}
+                openModal={openModal} // Pass openModal to Board
               />
             ))}
             <div className={styles.appBoardsLast}>
@@ -163,6 +193,12 @@ const KanbanPage = () => {
           </div>
         </div>
       </DragDropContext>
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        task={selectedTask}
+        onSave={handleSave}
+      />
     </div>
   );
 };

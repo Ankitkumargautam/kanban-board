@@ -10,7 +10,7 @@ import { ContextState } from '../../Context/ContextProvider';
 
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 
-const Board = ({ board, tasks, fetchBoardsAndTasks }) => {
+const Board = ({ board, tasks, fetchBoardsAndTasks, openModal }) => {
   const { user } = ContextState();
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -106,6 +106,7 @@ const Board = ({ board, tasks, fetchBoardsAndTasks }) => {
                       key={task._id}
                       task={task}
                       fetchBoardsAndTasks={fetchBoardsAndTasks}
+                      openModal={openModal}
                     />
                   </div>
                 )}

@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { ContextState } from '../../Context/ContextProvider';
 
-const Card = ({ task, fetchBoardsAndTasks }) => {
+const Card = ({ task, fetchBoardsAndTasks, openModal }) => {
   const { user } = ContextState();
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -28,7 +28,7 @@ const Card = ({ task, fetchBoardsAndTasks }) => {
   };
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={() => openModal(task)}>
       <div className={styles.cardTop}>
         <div className={styles.cardTopLabels}>
           <label style={{ backgroundColor: 'blue' }}>{task.priority}</label>
