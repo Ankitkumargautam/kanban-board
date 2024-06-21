@@ -1,16 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Card.module.css';
 import { CheckSquare, Clock, MoreHorizontal } from 'react-feather';
+import Dropdown from '../Dropdown/Dropdown';
 
 const Card = () => {
+  const [showDropdown, setShowDropdown] = useState(false);
+
   return (
     <div className={styles.card}>
       <div className={styles.cardTop}>
         <div className={styles.cardTopLabels}>
           <label style={{ backgroundColor: 'blue' }}>urgent</label>
         </div>
-        <div className={styles.cardTopMore}>
+        <div
+          className={styles.cardTopMore}
+          onClick={(event) => {
+            event.stopPropagation();
+            setShowDropdown(true);
+          }}
+        >
           <MoreHorizontal />
+          {showDropdown && (
+            <Dropdown
+              className={styles.boardDropdown}
+              onClose={() => setShowDropdown(false)}
+            >
+              <p
+                // onClick={() => props.removeCard(props.boardId, id)}
+                style={{ fontSize: '14px' }}
+              >
+                Delete Card
+              </p>
+            </Dropdown>
+          )}
         </div>
       </div>
       <div className={styles.cardTitle}>Card title</div>
