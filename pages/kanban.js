@@ -1,86 +1,3 @@
-// import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
-// import { ContextState } from '../Context/ContextProvider';
-// import Board from '../components/Board/Board';
-// import styles from './kanban.module.css';
-// import { useRouter } from 'next/router';
-// import { toast } from 'react-toastify';
-// import Editable from '../components/Editabled/Editable';
-
-// const Kanban = () => {
-//   const { user } = ContextState();
-//   const router = useRouter();
-//   const [boards, setBoards] = useState([]);
-
-//   useEffect(() => {
-//     if (user && user?.token) {
-//       fetchBoards();
-//     }
-//   }, [user && user?.token]);
-
-//   const fetchBoards = async () => {
-//     try {
-//       const config = {
-//         headers: {
-//           Authorization: `Bearer ${user?.token}`,
-//         },
-//       };
-//       const { data } = await axios.get('/api/boards', config);
-//       setBoards(data.data);
-//     } catch (error) {
-//       toast.error('Failed to fetch tasks');
-//       console.error(error);
-//     }
-//   };
-
-//   const addBoardHandler = async (name) => {
-//     try {
-//       const config = {
-//         headers: {
-//           Authorization: `Bearer ${user?.token}`,
-//         },
-//       };
-//       const { data } = await axios.post('/api/boards', { name }, config);
-//       setBoards((prevBoards) => [...prevBoards, data.data]);
-//       toast.success(data.message);
-//     } catch (error) {
-//       toast.error('Failed to add board');
-//       console.error(error);
-//     }
-//   };
-
-//   return (
-//     <div className={styles.app}>
-//       <div className={styles.appNavbar}>
-//         <h2>Kanban Board</h2>
-//         <h3>
-//           Welcome <span>{user?.name}</span>
-//         </h3>
-//       </div>
-//       <div className={styles.appBoardsContainer}>
-//         <div className={styles.appBoards}>
-//           {boards?.length === 0
-//             ? 'No Boards available'
-//             : boards?.map((board) => <Board key={board._id} board={board} />)}
-//           <div className={styles.appBoardsLast}>
-//             <Editable
-//               displayClass={styles.appBoardsAddBoard}
-//               editClass={styles.appBoardsAddBoardEdit}
-//               placeholder="Enter Board Name"
-//               text="Add Board"
-//               buttonText="Add Board"
-//               onSubmit={addBoardHandler}
-//               method="addBoard"
-//             />
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Kanban;
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from './kanban.module.css';
@@ -88,6 +5,8 @@ import { toast } from 'react-toastify';
 import Board from '../components/Board/Board';
 import { ContextState } from '../Context/ContextProvider';
 import Editable from '../components/Editabled/Editable';
+
+import { DragDropContext } from 'react-beautiful-dnd';
 
 const KanbanPage = () => {
   const { user } = ContextState();
@@ -139,11 +58,70 @@ const KanbanPage = () => {
         },
       };
       const { data } = await axios.post('/api/boards', { name }, config);
-      // setBoards((prevBoards) => [...prevBoards, data.data]);
       fetchBoardsAndTasks();
       toast.success(data.message);
     } catch (error) {
       toast.error('Failed to add board');
+      console.error(error);
+    }
+  };
+
+  const onDragEnd = async (result) => {
+    const { source, destination, draggableId } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
+      return;
+    }
+
+    const sourceBoardId = source.droppableId;
+    const destinationBoardId = destination.droppableId;
+
+    const sourceTasks = Array.from(tasksByBoard[sourceBoardId]);
+    const [movedTask] = sourceTasks.splice(source.index, 1);
+
+    if (sourceBoardId === destinationBoardId) {
+      sourceTasks.splice(destination.index, 0, movedTask);
+      setTasksByBoard((prev) => ({
+        ...prev,
+        [sourceBoardId]: sourceTasks,
+      }));
+    } else {
+      const destinationTasks = Array.from(tasksByBoard[destinationBoardId]);
+      destinationTasks.splice(destination.index, 0, movedTask);
+
+      setTasksByBoard((prev) => ({
+        ...prev,
+        [sourceBoardId]: sourceTasks,
+        [destinationBoardId]: destinationTasks,
+      }));
+    }
+
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      };
+      await axios.patch(
+        '/api/tasks/update-position',
+        {
+          taskId: draggableId,
+          sourceBoardId,
+          destinationBoardId,
+          position: destination.index,
+        },
+        config
+      );
+      toast.success('Task moved successfully');
+    } catch (error) {
+      toast.error('Failed to move task');
       console.error(error);
     }
   };
@@ -160,29 +138,31 @@ const KanbanPage = () => {
           Welcome <span>{user?.name}</span>
         </h3>
       </div>
-      <div className={styles.appBoardsContainer}>
-        <div className={styles.appBoards}>
-          {boards.map((board) => (
-            <Board
-              key={board._id}
-              board={board}
-              tasks={tasksByBoard[board._id]}
-              fetchBoardsAndTasks={fetchBoardsAndTasks}
-            />
-          ))}
-          <div className={styles.appBoardsLast}>
-            <Editable
-              displayClass={styles.appBoardsAddBoard}
-              editClass={styles.appBoardsAddBoardEdit}
-              placeholder="Enter Board Name"
-              text="Add Board"
-              buttonText="Add Board"
-              onSubmit={addBoardHandler}
-              method="addBoard"
-            />
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className={styles.appBoardsContainer}>
+          <div className={styles.appBoards}>
+            {boards.map((board) => (
+              <Board
+                key={board._id}
+                board={board}
+                tasks={tasksByBoard[board._id]}
+                fetchBoardsAndTasks={fetchBoardsAndTasks}
+              />
+            ))}
+            <div className={styles.appBoardsLast}>
+              <Editable
+                displayClass={styles.appBoardsAddBoard}
+                editClass={styles.appBoardsAddBoardEdit}
+                placeholder="Enter Board Name"
+                text="Add Board"
+                buttonText="Add Board"
+                onSubmit={addBoardHandler}
+                method="addBoard"
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </DragDropContext>
     </div>
   );
 };

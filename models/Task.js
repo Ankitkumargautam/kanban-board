@@ -26,6 +26,10 @@ const taskSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  position: {
+    type: Number,
+    default: 0, // Ensure a default value for position
+  },
 });
 
 const Task = mongoose.models.Task || mongoose.model('Task', taskSchema);
