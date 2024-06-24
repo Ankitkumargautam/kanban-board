@@ -55,7 +55,8 @@ const KanbanPage = () => {
       setTasksByBoard(tasksByBoardId);
       setLoading(false);
     } catch (error) {
-      toast.error('Failed to fetch data');
+      toast.error('Failed to fetch data,login again');
+      router.push('/');
       console.error(error);
       setLoading(false);
     }
